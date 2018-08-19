@@ -1,0 +1,8 @@
+template_path: templates/vpc.yaml
+parameters:
+    VPCName: sceptredemo
+    CidrBlock: 192.186.178.64/26
+    PublicA: 192.186.178.64/28
+    PublicB: 192.186.178.80/28
+    PrivateA: 192.186.178.96/28
+    PrivateB: 192.186.178.112/28

@@ -1,0 +1,81 @@
+--- 
+template_path: templates/security-groups.py
+dependencies: 
+  - prod/vpc
+sceptre_user_data: 
+  vpc_id: !stack_output "prod/vpc::VPCid"
+  groups: 
+  - lambda_sg: 
+    egress_rules: 
+      - 
+        description: "Allows lambda to send HTTPS to web application servers"
+        from_port: 443
+        name: httpslambdatoweb
+        sg: appsg
+        to_port: 443
+    group_desc: "Attaches to lambda, allows HTTPS to web application servers"
+    group_name: lambdasg
+  - app_sg: 
+    group_desc: "Attaches to web instance to allow traffic from ELB"
+    group_name: appsg
+    ingress_rules: 
+      - 
+        description: "HTTPS from ELB"
+        from_port: 443
+        name: httpswebfromelb
+        sg: elbsg
+        to_port: 443
+  - elb_sg: 
+    egress_rules: 
+      - 
+        description: "HTTPS to web application servers"
+        from_port: 443
+        name: httpselbtoweb
+        sg: appsg
+        to_port: 443
+    group_desc: "Allows inbound HTTPS from peered VPCs to web application servers"
+    group_name: elbsg
+    ingress_rules: 
+      - 
+        cidr_ip: 10.1.0.0/20
+        description: "HTTPS from VPC Peer 1"
+        from_port: 443
+        name: vpcpeer1https
+        to_port: 443
+      - 
+        cidr_ip: 10.2.0.0/20
+        description: "HTTPS from VPC Peer 2"
+        from_port: 443
+        name: vpcpeer2https
+        to_port: 443
+      - 
+        cidr_ip: 10.3.0.0/20
+        description: "HTTPS from VPC Peer 3"
+        from_port: 443
+        name: vpcpeer3https
+        to_port: 443
+      - 
+        cidr_ip: 10.4.0.0/20
+        description: "HTTPS from VPC Peer 4"
+        from_port: 443
+        name: vpcpeer4https
+        to_port: 443
+      - 
+        cidr_ip: 10.5.0.0/20
+        description: "HTTPS from VPC Peer 5"
+        from_port: 443
+        name: vpcpeer5https
+        to_port: 443
+      - 
+        cidr_ip: 10.6.0.0/20
+        description: "HTTPS from VPC Peer 6"
+        from_port: 443
+        name: vpcpeer6https
+        to_port: 443
+      - 
+        cidr_ip: 10.7.0.0/20
+        description: "HTTPS from VPC Peer 7"
+        from_port: 443
+        name: vpcpeer7https
+        to_port: 443
+

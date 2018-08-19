@@ -1,0 +1,122 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+    VPCName:
+        Description: Name for VPC
+        Type: String
+    CidrBlock:
+        Description: Main VPC Cidr Block
+        Type: String
+    PublicA:
+        Description: Public subnet A
+        Type: String
+    PublicB:
+        Description: Public subnet B
+        Type: String
+    PrivateA:
+        Description: Private subnet A
+        Type: String
+    PrivateB:
+        Description: Private subnet B
+        Type: String
+Resources:
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: !Ref CidrBlock
+            EnableDnsSupport: 'true'
+            Tags:
+            - Key: Name
+              Value: !Ref VPCName
+    pubSubA:
+        Type: 'AWS::EC2::Subnet'
+        DependsOn: VPC
+        Properties:
+            VpcId:
+                Ref: VPC
+            CidrBlock: !Ref PublicA
+            AvailabilityZone: !Select [0, !GetAZs '']
+            Tags:
+            - Key: Name
+              Value: PublicA
+    pubSubB:
+        Type: 'AWS::EC2::Subnet'
+        DependsOn: VPC
+        Properties:
+            VpcId:
+                Ref: VPC
+            CidrBlock: !Ref PublicB
+            AvailabilityZone: !Select [1, !GetAZs '']
+            Tags:
+            - Key: Name
+              Value: PublicB
+    privSubA:
+        Type: 'AWS::EC2::Subnet'
+        DependsOn: VPC
+        Properties:
+            VpcId:
+                Ref: VPC
+            CidrBlock: !Ref PrivateA
+            AvailabilityZone: !Select [0, !GetAZs '']
+            Tags:
+            - Key: Name
+              Value: PrivateA
+    privSubB:
+        Type: 'AWS::EC2::Subnet'
+        DependsOn: VPC
+        Properties:
+            VpcId:
+                Ref: VPC
+            CidrBlock: !Ref PrivateB
+            AvailabilityZone: !Select [1, !GetAZs '']
+            Tags:
+            - Key: Name
+              Value: PrivateB
+Outputs:
+    VPCid:
+        Description: 'id of vpc'
+        Value: !Ref VPC
+        Export:
+            Name: !Sub '${AWS::StackName}-VPCId'
+    pubSubA:
+        Description: 'id of pub sub A'
+        Value: !Ref pubSubA
+        Export:
+            Name: !Sub '${AWS::StackName}-pubSubA'
+    pubSubB:
+        Description: 'id of pub sub B'
+        Value: !Ref pubSubB
+        Export:
+            Name: !Sub '${AWS::StackName}-pubSubB'
+    privSubA:
+        Description: 'id of priv sub A'
+        Value: !Ref privSubA
+        Export:
+            Name: !Sub '${AWS::StackName}-privSubA'
+    privSubB:
+        Description: 'id of priv sub B'
+        Value: !Ref privSubB
+        Export:
+            Name: !Sub '${AWS::StackName}-privSubB'
+    privSubACidr:
+        Description: 'cidr of private subnet a'
+        Value: !Ref PrivateA
+        Export:
+            Name: !Sub '${AWS::StackName}-privSubACidr'
+    privSubBCidr:
+        Description: 'cidr of private subnet b'
+        Value: !Ref PrivateB
+        Export:
+            Name: !Sub '${AWS::StackName}-privSubBCidr'
+    pubSubACidr:
+        Description: 'cidr of public subnet a'
+        Value: !Ref PublicA
+        Export:
+            Name: !Sub '${AWS::StackName}-pubSubACidr'
+    pubSubBCidr:
+        Description: 'cidr of public subnet b'
+        Value: !Ref PublicB
+        Export:
+            Name: !Sub '${AWS::StackName}-pubSubBCidr'
+
+        
+
